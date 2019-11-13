@@ -1,0 +1,72 @@
+{
+  "name": "react-json-to-form",
+  "version": "0.0.1",
+  "private": false,
+  "description": "React form component generator from Json",
+  "main": "react-json-to-form/index.js",
+  "homepage": "https://juanmsl.github.io/react-json-to-form/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/juanmsl/react-json-to-form"
+  },
+  "author": {
+    "name": "Juan Manuel Sánchez Lozano",
+    "email": "juanmsl_pk@hotmail.com",
+    "url": "https://juanmsl.github.io/"
+  },
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "form",
+    "generator",
+    "json"
+  ],
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "pkg:build": "rm -rf react-json-to-form && mkdir react-json-to-form && babel src/components -d react-json-to-form --copy-files",
+    "pkg:publish": "yarn run pkg:build && yarn publish"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "peerDependencies": {
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "react-scripts": "3.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.7.2",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-react": "^7.6.3",
+    "gh-pages": "^2.1.1",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "react-scripts": "3.2.0"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-class-properties"
+    ]
+  }
+}
