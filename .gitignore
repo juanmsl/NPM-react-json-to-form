@@ -8,7 +8,7 @@
 
 # production
 /build
-/react-viewport-size
+/react-json-to-form
 
 # misc
 .DS_Store
