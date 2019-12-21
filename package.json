@@ -1,6 +1,6 @@
 {
   "name": "react-json-to-form",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "private": false,
   "description": "React form component generator from Json",
   "main": "react-json-to-form/index.js",
@@ -57,8 +57,10 @@
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-react": "^7.6.3",
     "gh-pages": "^2.1.1",
+    "node-sass": "^4.13.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
+    "react-json-view": "^1.19.1",
     "react-scripts": "3.2.0"
   },
   "babel": {
