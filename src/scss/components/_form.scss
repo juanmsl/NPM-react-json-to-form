@@ -1,0 +1,121 @@
+.form {
+  display: grid;
+  grid-auto-flow: row;
+  grid-gap: $gutter;
+  align-content: center;
+  background: white;
+  padding: $padding * 5 $padding * 4;
+  box-shadow: 0 0 0 6px rgba($gray-color, 0.3);
+  color: $gray-color;
+
+  .form-title {
+    font-weight: bolder;
+    margin-top: 0;
+    margin-bottom: $margin * 2;
+  }
+
+  .form_label {
+    font-size: 0.8em;
+    display: block;
+  }
+
+  .form_input {
+    color: black;
+    padding: $padding 0;
+    border: 0;
+    outline: 0;
+    border-bottom: 1px solid $gray-color;
+    width: 100%;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    border-radius: 0;
+  }
+
+  .form_field {
+  }
+
+  .form_group {
+    & > .form_label {
+      margin-bottom: $margin;
+    }
+  }
+
+  .form_fields_group--radio {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: $gutter;
+  }
+
+  .form_field--radio {
+    position: relative;
+
+    .form_label {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: $padding / 2;
+    }
+
+    .form_input {
+      grid-area: 'item';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      opacity: 0;
+      left: 0;
+
+      &:checked ~ label {
+        outline: 1px solid;
+        background: #eee;
+      }
+    }
+  }
+
+  .form_button_field {
+    input {
+      border: 0;
+      background: $blue-dark;
+      color: white;
+      padding: $padding $padding * 2;
+      cursor: pointer;
+      margin-left: auto;
+
+      &:active {
+        transform: translateY(1px);
+      }
+    }
+  }
+
+  .form_message {
+    text-align: left;
+    padding: $padding 0;
+    margin: 0;
+    display: block;
+    line-height: 1.5em;
+    font-size: 0.8em;
+
+    &.link {
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &.info {
+      padding: $padding 0;
+      text-align: center;
+    }
+
+    &.error {
+      padding: $padding;
+      font-size: 0.8em;
+      text-align: center;
+      color: indianred;
+      background: lighten(indianred, 30);
+    }
+  }
+}

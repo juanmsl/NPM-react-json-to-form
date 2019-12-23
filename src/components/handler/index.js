@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 
 const InputHandler = (InputComponent) => {
@@ -15,8 +16,13 @@ const InputHandler = (InputComponent) => {
             value: ""
         };
 
+        static propTypes = {
+            name: PropTypes.string.isRequired,
+            value: PropTypes.string,
+            onChange: PropTypes.func.isRequired
+        };
+
         handleChange = (e) => {
-            e.preventDefault();
             const {type, checked, value} = e.target;
             const inputValue = type === 'checkbox' ? checked : value;
             const nextState = {...this.state, value: inputValue};

@@ -1,26 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ClassicInput from "./input";
-import FormMessage from "./message";
+import Custom from "./custom";
 import SelectInput from "./select";
 import TextareaInput from "./textarea";
+import Label from "./label";
 
 
 class Form extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            fieldsGroupClass: props.data.fieldsGroupClass || null,
+            fieldClass: props.data.fieldClass || null,
+            labelClass: props.data.labelClass || null,
+            inputClass: props.data.inputClass || null,
+            formData: {}
+        };
     }
 
     componentDidMount() {
         const {data} = this.props;
-        const fieldNames = Object.keys(data);
         const state = {};
 
-        fieldNames.forEach((name) => {
-            const field = data[name];
-            const {value} = field;
-            state[name] = value;
+        data.fields.forEach((field) => {
+            const {type, value, name} = field;
+            if(type !== "submit") {
+                state[name] = value || "";
+            }
         });
 
         this.setState(state);
@@ -28,85 +35,152 @@ class Form extends React.Component {
 
     handleInputChange = (e, state) => {
         const {name, value} = state;
-        this.setState({[name]: value});
+        this.setState({formData: {
+            ...this.state.formData,
+            [name]: value
+        }});
     };
 
-    createField = (name, i, {data, fieldClass, labelClass, inputClass, allFieldsRequired}) => {
-        const field = data[name];
+    getCommonProps = (field, i) => {
+        const { label, required, ...fieldProps } = field;
+        const { name } = field;
 
-        const { autoComplete } = this.props;
-        const { type, isVisible, ...messageProps } = field;
-
-        if (isVisible === false) return null;
-
-        const inputProps = {
-            id: i,
-            onChange: this.handleInputChange,
-            name, fieldClass, labelClass, inputClass,
-            required: !!allFieldsRequired,
-            autoComplete: autoComplete,
-            ...field
+        const labelProps = {
+            id: `${name}_${i}`,
+            className: this.state.labelClass,
+            ...(label instanceof Object ? label : {})
         };
 
-        if (type === "message") return <FormMessage key={i} {...messageProps} />;
-        if (type === "textarea") return <TextareaInput key={i} {...inputProps} />;
-        if (type === "select") return <SelectInput key={i} {...inputProps} />;
-        return <ClassicInput key={i} {...inputProps} />;
+        const commonProps = {
+            fieldClass: this.state.fieldClass,
+            className: this.state.inputClass,
+            label: !label ? null : <Label {...labelProps} />,
+            required: required !== undefined ? required : this.props.data.allFieldsRequired,
+            id: `${name}_${i}`,
+            autoComplete: "off"
+        };
+
+        return [commonProps, fieldProps];
     };
 
-    createFields = (params) => (
-        Object.keys(params.data)
-            .map((name, i) => (
-                this.createField(name, i, params)
-            ))
+    createClassicInput = (i, commonProps, fieldProps) => {
+        const props = {
+            ...commonProps,
+            onChange: this.handleInputChange,
+            ...fieldProps
+        };
+
+        return <ClassicInput key={i} {...props} />
+    };
+
+    createSelectInput = (i, commonProps, fieldProps) => {
+        const { type, ...inputProps } = fieldProps;
+        
+        const props = {
+            ...commonProps,
+            onChange: this.handleInputChange,
+            ...inputProps
+        };
+
+        return <SelectInput key={i} {...props} />
+    };
+    
+    createTextareaInput = (i, commonProps, fieldProps) => {
+        const { type, ...inputProps } = fieldProps;
+
+        const props = {
+            ...commonProps,
+            onChange: this.handleInputChange,
+            ...inputProps
+        };
+
+        return <TextareaInput key={i} {...props} />
+    };
+
+    createCustom = (field, i) => {
+        const { content, ...fieldProps } = field;
+        return <Custom key={i} {...fieldProps}>{content}</Custom>
+    };
+
+    createGroup = (field, i) => {
+        const {labelClass, fields, title, type, fieldsGroupClass, ...groupProps} = field;
+
+        return (
+            <section key={i} className={this.state.fieldClass} {...groupProps}>
+                <span className={labelClass || this.state.labelClass}>{title}</span>
+                <section className={fieldsGroupClass || this.state.fieldsGroupClass}>
+                    {this.createFields(fields)}
+                </section>
+            </section>
+        );
+    }
+
+    createFields = (fields) => (
+        fields.map(
+            (field, i) => {
+                const [commonProps, fieldProps] = this.getCommonProps(field, i);
+
+                switch (field.type) {
+                    case 'group': return this.createGroup(field, i);
+                    case 'custom': return this.createCustom(field, i);
+                    case 'textarea': return this.createTextareaInput(i, commonProps, fieldProps);
+                    case 'select': return this.createSelectInput(i, commonProps, fieldProps);
+                    default: return this.createClassicInput(i, commonProps, fieldProps);
+                }
+            }
+        )
     );
 
     handleSubmit = (e) => {
         e.preventDefault();
         const {onSubmit} = this.props;
-        onSubmit(e, this.state);
+        onSubmit(e, this.state.formData);
     };
 
     render() {
         const {
-            formTitleClassName, formTitle,
-            fieldClass, labelClass, inputClass,
-            allFieldsRequired, data,
-            ...formProps
+            data, children, ...formProps
         } = this.props;
-
-        const props = {
-            data,
-            fieldClass,
-            labelClass,
-            inputClass,
-            allFieldsRequired
-        };
 
         return (
             <form {...formProps} onSubmit={this.handleSubmit}>
-                {!formTitle ? null : <h1 className={formTitleClassName}>{formTitle}</h1>}
-                {this.createFields(props)}
+                {children}
+                {this.createFields(data.fields)}
             </form>
         );
     }
 };
 
 Form.defaultProps = {
-    data: {},
-    fieldClass: null,
-    labelClass: null,
-    inputClass: null,
-    allFieldsRequired: false
+    data: {}
 };
 
 Form.propTypes = {
-    isEnable: PropTypes.bool,
-    allFieldsRequired: PropTypes.bool,
-    fieldClass: PropTypes.string,
-    labelClass: PropTypes.string,
-    inputClass: PropTypes.string,
-    data: PropTypes.shape({}).isRequired
+    data: PropTypes.shape({
+        allFieldsRequired: PropTypes.bool,
+        fieldsGroupClass: PropTypes.string,
+        fieldClass: PropTypes.string,
+        labelClass: PropTypes.string,
+        inputClass: PropTypes.string,
+        fields: PropTypes.arrayOf(PropTypes.shape({
+            type: PropTypes.oneOf(['group', 'text', 'password', 'email', 'number', 'date', 'select', 'textarea', 'custom', 'radio', 'submit', 'reset']).isRequired,
+            name: PropTypes.string,
+            value: PropTypes.string,
+            required: PropTypes.bool,
+            autoComplete: PropTypes.string,
+            className: PropTypes.string,
+            
+            fieldClass: PropTypes.string,
+            label: PropTypes.shape({
+                value: PropTypes.string.isRequired,
+                className: PropTypes.string
+            }),
+            options: PropTypes.arrayOf(PropTypes.shape({
+                value: PropTypes.string,
+                label: PropTypes.string
+            }))
+        })).isRequired
+    }).isRequired
 };
 
 export default Form;
