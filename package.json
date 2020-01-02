@@ -1,6 +1,6 @@
 {
   "name": "react-json-to-form",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "private": false,
   "description": "React form component generator from Json",
   "main": "react-json-to-form/index.js",
