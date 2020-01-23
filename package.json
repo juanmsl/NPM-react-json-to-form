@@ -1,9 +1,9 @@
 {
   "name": "react-json-to-form",
-  "version": "0.1.8",
+  "version": "1.0.0",
   "private": false,
   "description": "React form component generator from Json",
-  "main": "react-json-to-form/index.js",
+  "main": "lib/index.js",
   "homepage": "https://juanmsl.github.io/react-json-to-form/",
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
     "deploy": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "pkg:build": "rm -rf react-json-to-form && mkdir react-json-to-form && babel src/components -d react-json-to-form --copy-files",
+    "pkg:build": "rm -rf lib && mkdir lib && babel src/components -d lib --copy-files",
     "pkg:publish": "yarn run pkg:build && yarn publish"
   },
   "eslintConfig": {
@@ -48,8 +48,7 @@
   },
   "peerDependencies": {
     "react": "^16.11.0",
-    "react-dom": "^16.11.0",
-    "react-scripts": "3.2.0"
+    "react-dom": "^16.11.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
