@@ -38,7 +38,7 @@ Input.propTypes = {
     label: PropTypes.node,
 
     id: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['text', 'password', 'email', 'number', 'date', 'select', 'radio', 'submit', 'reset']).isRequired,
+    type: PropTypes.oneOf(['text', 'password', 'email', 'number', 'date', 'select', 'url', 'radio', 'submit', 'reset']).isRequired,
     name: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
     required: PropTypes.bool,

@@ -163,7 +163,7 @@ Form.propTypes = {
         labelClass: PropTypes.string,
         inputClass: PropTypes.string,
         fields: PropTypes.arrayOf(PropTypes.shape({
-            type: PropTypes.oneOf(['group', 'text', 'password', 'email', 'number', 'date', 'select', 'textarea', 'custom', 'radio', 'submit', 'reset']).isRequired,
+            type: PropTypes.oneOf(['group', 'text', 'password', 'email', 'number', 'date', 'select', 'url', 'textarea', 'custom', 'radio', 'submit', 'reset']).isRequired,
             name: PropTypes.string,
             value: PropTypes.string,
             required: PropTypes.bool,
