@@ -5,7 +5,7 @@ export default function Custom(props) {
 
     return (
         <section {...otherProps}>
-            {children()}
+            {typeof(children) === 'function' ? children() : children}
         </section>
     );
 };
