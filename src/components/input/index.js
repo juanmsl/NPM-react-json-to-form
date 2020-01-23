@@ -28,7 +28,7 @@ class Input extends React.Component {
                 {type === "radio" ? label : null}
                 {type === "password" ?
                     <h6 onClick={this.toggleType} style={{cursor: 'pointer'}}>
-                        {type === "password" ? 'Show' : 'Hide'} password
+                        {this.state.type === "password" ? 'Show' : 'Hide'} password
                     </h6>
                     : null
                 }
