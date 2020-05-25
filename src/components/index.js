@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Custom from "./custom";
 import Label from "./label";
 import PasswordToggle from "./pasword-toggle";
-import Field from "components/field";
+import Field from "./field";
 import {
     PasswordInput, ClassicInput,
     TextareaInput, SelectInput
