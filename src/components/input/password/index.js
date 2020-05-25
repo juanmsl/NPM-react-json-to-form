@@ -1,6 +1,6 @@
 import React from 'react';
 import InputHandler from "components/handler";
-import { ClassicInput } from "components/input";
+import { ClassicInput } from "../../input";
 
 
 const PasswordInput = (props) => {

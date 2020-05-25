@@ -7,7 +7,7 @@ import Field from "components/field";
 import {
     PasswordInput, ClassicInput,
     TextareaInput, SelectInput
-} from "components/input";
+} from "./input";
 
 
 class Form extends React.Component {

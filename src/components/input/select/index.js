@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import InputHandler from "components/handler";
+import InputHandler from "../../handler";
 
 
 const SelectInput = (props) => {
