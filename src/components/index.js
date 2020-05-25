@@ -197,7 +197,7 @@ Form.defaultProps = {
 
 Form.propTypes = {
     data: PropTypes.shape({
-        passwordToggleComponent: PropTypes.element,
+        passwordToggleComponent: PropTypes.elementType,
         allFieldsRequired: PropTypes.bool,
         fieldsGroupClass: PropTypes.string,
         fieldClass: PropTypes.string,
