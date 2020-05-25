@@ -1,5 +1,5 @@
 import React from 'react';
-import InputHandler from "components/handler";
+import InputHandler from "../../handler";
 import { ClassicInput } from "../../input";
 
 
