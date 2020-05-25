@@ -43,7 +43,9 @@ class App extends React.Component {
         },
         {
           type: 'group',
-          title: 'Gender',
+          label: {
+            value: 'Gender'
+          },
           className: "form_group",
           fieldsGroupClass: "form_fields_group--radio",
           fields: [
@@ -51,6 +53,7 @@ class App extends React.Component {
               name: "gender",
               type: "radio",
               value: "m",
+              id: '_m',
               label: {
                 value: "Male"
               },
@@ -60,6 +63,7 @@ class App extends React.Component {
               name: "gender",
               type: "radio",
               value: "f",
+              id: '_f',
               label: {
                 value: "Female"
               },
@@ -77,6 +81,16 @@ class App extends React.Component {
         {
           name: "password",
           type: "password",
+          autoComplete: 'off',
+          label: {
+            value: "Password"
+          }
+        },
+        {
+          name: "password",
+          type: "password",
+          autoComplete: 'off',
+          id: '_2',
           label: {
             value: "Password"
           }

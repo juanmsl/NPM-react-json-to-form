@@ -1,13 +1,13 @@
 import React from 'react';
 
-class Label extends React.Component {
-  render() {
-    const {id, value, ...labelProps} = this.props;
-    
-    return (
-      <label htmlFor={id} {...labelProps}>{value}</label>
-    );
-  }
-}
+
+const Label = (props) => (
+    <label
+        htmlFor={props.id}
+        className={props.className}
+    >
+        {props.value}
+    </label>
+);
 
 export default Label;

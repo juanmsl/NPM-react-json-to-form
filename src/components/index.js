@@ -1,16 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ClassicInput from "./input";
 import Custom from "./custom";
-import SelectInput from "./select";
-import TextareaInput from "./textarea";
 import Label from "./label";
+import PasswordToggle from "./pasword-toggle";
+import Field from "components/field";
+import {
+    PasswordInput, ClassicInput,
+    TextareaInput, SelectInput
+} from "components/input";
 
 
 class Form extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            passwordToggleComponent: props.data.passwordToggleComponent || PasswordToggle,
             fieldsGroupClass: props.data.fieldsGroupClass || null,
             fieldClass: props.data.fieldClass || null,
             labelClass: props.data.labelClass || null,
@@ -41,94 +45,130 @@ class Form extends React.Component {
         }});
     };
 
-    getCommonProps = (field, i) => {
-        const { label, required, ...fieldProps } = field;
-        const { name } = field;
+    getFieldId = (field) => (
+        `${field.name}${field.id || ''}`
+    );
 
-        const labelProps = {
-            id: `${name}_${i}`,
-            className: this.state.labelClass,
-            ...(label instanceof Object ? label : {})
-        };
+    getRequired = (field) => (
+        field.required === undefined ?
+            this.state.allFieldsRequired
+            : field.required
+    );
 
-        const commonProps = {
-            fieldClass: this.state.fieldClass,
-            className: this.state.inputClass,
-            label: !label ? null : <Label {...labelProps} />,
-            required: required !== undefined ? required : this.props.data.allFieldsRequired,
-            id: `${name}_${i}`,
-            autoComplete: "off"
-        };
+    getPasswordToggleComponent = (field) => (
+        field.passwordToggleComponent || this.state.passwordToggleComponent
+    );
 
-        return [commonProps, fieldProps];
-    };
+    getFieldClass = (field) => (
+        field.fieldClass || this.state.fieldClass
+    );
 
-    createClassicInput = (i, commonProps, fieldProps) => {
-        const props = {
-            ...commonProps,
-            onChange: this.handleInputChange,
-            ...fieldProps
-        };
+    getLabelClass = (field, label) => (
+        label ? label.className || field.labelClass || this.state.labelClass : field.labelClass || this.state.labelClass
+    );
 
-        return <ClassicInput key={i} {...props} />
-    };
+    getInputClass = (field) => (
+        field.inputClass || this.state.inputClass
+    );
 
-    createSelectInput = (i, commonProps, fieldProps) => {
-        const { type, ...inputProps } = fieldProps;
-        
-        const props = {
-            ...commonProps,
-            onChange: this.handleInputChange,
-            ...inputProps
-        };
+    getFieldsGroupClass = (field) => (
+        field.fieldsGroupClass || this.state.fieldsGroupClass
+    );
 
-        return <SelectInput key={i} {...props} />
-    };
-    
-    createTextareaInput = (i, commonProps, fieldProps) => {
-        const { type, ...inputProps } = fieldProps;
+    getFieldLabel = (field) => (
+        field.label ?
+            <Label
+                id={this.getFieldId(field)}
+                className={this.getLabelClass(field)}
+                {...field.label}
+            />
+            : null
+    );
 
-        const props = {
-            ...commonProps,
-            onChange: this.handleInputChange,
-            ...inputProps
-        };
+    getInputProps = (field) => ({
+        id: this.getFieldId(field),
+        name: field.name,
+        value: field.value,
+        required: this.getRequired(field),
+        autoComplete: field.autoComplete || null,
+        className: this.getInputClass(field),
+        onChange: this.handleInputChange,
+    });
 
-        return <TextareaInput key={i} {...props} />
-    };
+    createClassicField = (field, key) => (
+        <Field className={this.getFieldClass(field)} key={key}>
+            {this.getFieldLabel(field)}
+            <ClassicInput
+                {...this.getInputProps(field)}
+                type={field.type}
+            />
+        </Field>
+    );
 
-    createCustom = (field, i) => {
-        const { content, ...fieldProps } = field;
-        return <Custom key={i} {...fieldProps}>{content}</Custom>
-    };
+    createPasswordField = (field, key) => (
+        <Field className={this.getFieldClass(field)} key={key}>
+            {this.getFieldLabel(field)}
+            <PasswordInput
+                {...this.getInputProps(field)}
+                PasswordToggleComponent={this.getPasswordToggleComponent(field)}
+            />
+        </Field>
+    );
 
-    createGroup = (field, i) => {
-        const {labelClass, fields, title, type, fieldsGroupClass, ...groupProps} = field;
+    createTextareaField = (field, key) => (
+        <Field className={this.getFieldClass(field)} key={key}>
+            {this.getFieldLabel(field)}
+            <TextareaInput
+                {...this.getInputProps(field)}
+            />
+        </Field>
+    );
 
-        return (
-            <section key={i} className={this.state.fieldClass} {...groupProps}>
-                <span className={labelClass || this.state.labelClass}>{title}</span>
-                <section className={fieldsGroupClass || this.state.fieldsGroupClass}>
-                    {this.createFields(fields)}
-                </section>
+    createSelectField = (field, key) => (
+        <Field className={this.getFieldClass(field)} key={key}>
+            {this.getFieldLabel(field)}
+            <SelectInput
+                {...this.getInputProps(field)}
+                options={field.options}
+            />
+        </Field>
+    );
+
+    createGroupField = (field, key) => (
+        <Field className={this.getFieldClass(field)} key={key}>
+            {this.getFieldLabel(field)}
+            <section className={this.getFieldsGroupClass(field)}>
+                {this.createFields(field.fields)}
             </section>
-        );
-    }
+        </Field>
+    );
+
+    createCustomField = (field, key) => {
+        const { content } = field;
+        return <Custom key={key}>{content}</Custom>
+    };
+
+    createCustomInput = (field, key) => (
+        <Field className={this.getFieldClass(field)} key={key}>
+            {this.getFieldLabel(field)}
+            <field.component
+                {...this.getInputProps(field)}
+            />
+        </Field>
+    );
 
     createFields = (fields) => (
-        fields.map(
-            (field, i) => {
-                const [commonProps, fieldProps] = this.getCommonProps(field, i);
-
-                switch (field.type) {
-                    case 'group': return this.createGroup(field, i);
-                    case 'custom': return this.createCustom(field, i);
-                    case 'textarea': return this.createTextareaInput(i, commonProps, fieldProps);
-                    case 'select': return this.createSelectInput(i, commonProps, fieldProps);
-                    default: return this.createClassicInput(i, commonProps, fieldProps);
-                }
+        fields.map((field, i) => {
+            switch (field.type) {
+                case 'password': return this.createPasswordField(field, i);
+                case 'textarea': return this.createTextareaField(field, i);
+                case 'select': return this.createSelectField(field, i);
+                case 'group': return this.createGroupField(field, i);
+                case 'custom': return this.createCustomField(field, i);
+                case 'customInput': return this.createCustomInput(field, i);
+                default: return this.createClassicField(field, i);
             }
-        )
+        })
     );
 
     handleSubmit = (e) => {
@@ -149,7 +189,7 @@ class Form extends React.Component {
             </form>
         );
     }
-};
+}
 
 Form.defaultProps = {
     data: {}
@@ -157,13 +197,14 @@ Form.defaultProps = {
 
 Form.propTypes = {
     data: PropTypes.shape({
+        passwordToggleComponent: PropTypes.element,
         allFieldsRequired: PropTypes.bool,
         fieldsGroupClass: PropTypes.string,
         fieldClass: PropTypes.string,
         labelClass: PropTypes.string,
         inputClass: PropTypes.string,
         fields: PropTypes.arrayOf(PropTypes.shape({
-            type: PropTypes.oneOf(['group', 'text', 'password', 'email', 'number', 'date', 'select', 'url', 'textarea', 'custom', 'radio', 'submit', 'reset']).isRequired,
+            type: PropTypes.oneOf(['group', 'text', 'password', 'email', 'number', 'date', 'select', 'url', 'textarea', 'custom', 'customInput', 'radio', 'submit', 'reset']).isRequired,
             name: PropTypes.string,
             value: PropTypes.string,
             required: PropTypes.bool,
